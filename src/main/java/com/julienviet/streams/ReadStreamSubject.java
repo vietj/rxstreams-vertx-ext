@@ -1,6 +1,6 @@
-package com.julienviet.rxstreams;
+package com.julienviet.streams;
 
-import com.julienviet.rxstreams.impl.Status;
+import com.julienviet.streams.impl.Status;
 import io.vertx.core.Handler;
 import io.vertx.core.streams.ReadStream;
 
@@ -16,9 +16,6 @@ public class ReadStreamSubject<T> implements ReadStream<T>, Handler<T> {
 
   @Override
   public synchronized void handle(T event) {
-    if (handler == null) {
-      throw new IllegalStateException();
-    }
     if (paused) {
       throw new IllegalStateException();
     }

@@ -1,4 +1,4 @@
-package com.julienviet.rxstreams.impl;
+package com.julienviet.streams.impl;
 
 /**
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>

@@ -16,7 +16,7 @@ public class PublisherSubject<T> implements Publisher<T>, Consumer<T> {
 
   @Override
   public void accept(T t) {
-    if (subscriber == null || requested < 1) {
+    if (requested < 1) {
       throw new IllegalStateException();
     }
     subscriber.onNext(t);

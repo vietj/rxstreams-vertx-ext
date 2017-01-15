@@ -1,7 +1,5 @@
-package com.julienviet.rxstreams;
+package com.julienviet.streams;
 
-import com.julienviet.rxstreams.ReadStreamSubject;
-import com.julienviet.rxstreams.RxReadStream;
 import org.junit.Test;
 
 import java.util.ArrayList;

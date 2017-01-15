@@ -1,6 +1,6 @@
-package com.julienviet.rxstreams.impl;
+package com.julienviet.streams.impl;
 
-import com.julienviet.rxstreams.RxReadStream;
+import com.julienviet.streams.RxReadStream;
 import io.vertx.core.Handler;
 import io.vertx.core.streams.ReadStream;
 

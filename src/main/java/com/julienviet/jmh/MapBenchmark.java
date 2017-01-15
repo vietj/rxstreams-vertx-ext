@@ -41,7 +41,7 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
 @State(Scope.Thread)
-public class ConcatMapBenchmark extends BenchmarkBase {
+public class MapBenchmark extends BenchmarkBase {
 
   @State(Scope.Thread)
   public static class RxJava2BaselineState {
@@ -58,12 +58,8 @@ public class ConcatMapBenchmark extends BenchmarkBase {
     }
   }
 
-  /**
-   * Note this benchmark performs much better because RxJava2 casts Flowable.just(x) as
-   * a Callable that returns x and no subscription ever occurs.
-   */
   @State(Scope.Thread)
-  public static class RxJava2ConcatMapJustState {
+  public static class RxJava2MapJustState {
 
     private Integer i = 1;
     private PublisherSubject<Integer> subject;
@@ -72,22 +68,7 @@ public class ConcatMapBenchmark extends BenchmarkBase {
     @Setup
     public void setup(Blackhole blackhole) {
       subject = new PublisherSubject<>();
-      flowable = Flowable.unsafeCreate(subject).concatMap(Flowable::just);
-      flowable.subscribe(new BlackholeSubscriber(blackhole));
-    }
-  }
-
-  @State(Scope.Thread)
-  public static class RxJava2ConcatMapRangeState {
-
-    private Integer i = 1;
-    private PublisherSubject<Integer> subject;
-    private Flowable<Integer> flowable;
-
-    @Setup
-    public void setup(Blackhole blackhole) {
-      subject = new PublisherSubject<>();
-      flowable = Flowable.unsafeCreate(subject).concatMap(v -> Flowable.range(1, 10));
+      flowable = Flowable.unsafeCreate(subject).map(i -> i * 2);
       flowable.subscribe(new BlackholeSubscriber(blackhole));
     }
   }
@@ -108,7 +89,7 @@ public class ConcatMapBenchmark extends BenchmarkBase {
   }
 
   @State(Scope.Thread)
-  public static class RxStreamsConcatMapJustState {
+  public static class RxStreamsMapJustState {
 
     private Integer i = 1;
     private ReadStreamSubject<Integer> subject;
@@ -117,22 +98,7 @@ public class ConcatMapBenchmark extends BenchmarkBase {
     @Setup
     public void setup(Blackhole blackhole) {
       subject = new ReadStreamSubject<>();
-      stream = RxReadStream.create(subject).concatMap(RxReadStream::just);
-      stream.handler(new BlackholeHandler<>(blackhole));
-    }
-  }
-
-  @State(Scope.Thread)
-  public static class RxStreamsConcatMapRangeState {
-
-    private Integer i = 1;
-    private ReadStreamSubject<Integer> subject;
-    private RxReadStream<Integer> stream;
-
-    @Setup
-    public void setup(Blackhole blackhole) {
-      subject = new ReadStreamSubject<>();
-      stream = RxReadStream.create(subject).concatMap(v -> RxReadStream.range(1, 10));
+      stream = RxReadStream.create(subject).map(i -> i * 2);
       stream.handler(new BlackholeHandler<>(blackhole));
     }
   }
@@ -143,12 +109,7 @@ public class ConcatMapBenchmark extends BenchmarkBase {
   }
 
   @Benchmark
-  public void rxJava2ConcatMapJust(RxJava2ConcatMapJustState state) {
-    state.subject.accept(state.i);
-  }
-
-  @Benchmark
-  public void rxJava2ConcatMapRange(RxJava2ConcatMapRangeState state) {
+  public void rxJava2Map(RxJava2MapJustState state) {
     state.subject.accept(state.i);
   }
 
@@ -158,12 +119,8 @@ public class ConcatMapBenchmark extends BenchmarkBase {
   }
 
   @Benchmark
-  public void rxStreamsConcatMapJust(RxStreamsConcatMapJustState state) {
+  public void rxStreamsMap(RxStreamsMapJustState state) {
     state.subject.handle(state.i);
   }
 
-  @Benchmark
-  public void rxStreamsConcatMapRange(RxStreamsConcatMapRangeState state) {
-    state.subject.handle(state.i);
-  }
 }
