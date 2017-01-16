@@ -49,13 +49,13 @@ import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.concurrent.TimeUnit;
 
-@Warmup(iterations = 5)
-@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
 @Threads(1)
 @BenchmarkMode(Mode.Throughput)
-@Fork(value = 1, jvmArgs = { "-XX:+UseBiasedLocking", "-XX:BiasedLockingStartupDelay=0" })
+@Fork(value = 3, jvmArgs = { "-XX:+UseBiasedLocking", "-XX:BiasedLockingStartupDelay=0", "-XX:+AggressiveOpts"})
 @State(Scope.Thread)
-@OutputTimeUnit(TimeUnit.SECONDS)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class ConcatMapBenchmark {
 
   @State(Scope.Thread)
